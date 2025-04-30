@@ -1,4 +1,4 @@
-package api
+package handler
 
 import (
 	"encoding/base64"
@@ -44,7 +44,9 @@ type Enclosure struct {
 }
 
 // Handler - Vercel serverless function
-func Handler(w http.ResponseWriter, r *http.Request) {
+func Handle(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("Request received: %s %s\n", r.Method, r.URL.Path)
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
@@ -54,8 +56,20 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Extract the base64 encoded data
-	base64Data := r.URL.Query().Get("data")
+	// Extract the base64 encoded data from either path or query parameter
+	base64Data := ""
+
+	// Try path format first (/api/rss/[base64data].xml)
+
+	pathParts := strings.Split(r.URL.Path, "/")
+	if len(pathParts) > 3 {
+		// Extract the last part of the path and remove .xml extension
+		lastPart := pathParts[len(pathParts)-1]
+		if strings.HasSuffix(lastPart, ".xml") {
+			base64Data = strings.TrimSuffix(lastPart, ".xml")
+		}
+	}
+
 	if base64Data == "" {
 		http.Error(w, "No data provided", http.StatusBadRequest)
 		return

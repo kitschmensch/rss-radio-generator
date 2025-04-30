@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.history.replaceState(null, "", pageURL);
     
     // Generate the RSS URL
-    const rssURL = `${window.location.origin}/api/rss?${queryParams.toString()}`;
+    const rssURL = `${window.location.origin}/api/rss/${base64Data}.xml`;
     
     // Update the "Generated URL" input box
     generatedURLInput.value = rssURL;
