@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSS Radio Generator</title>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>RSS Radio Generator</h1>
+    <p id="tip"><i>Tip: The form's information is saved automatically in the URL. Bookmark to save or share the URL with friends!</i></p>
+    <form id="rssForm">
+        <label for="title">Feed Title:</label>
+        <input type="text" id="title" name="title" placeholder="Feed Title" required><br><br>
+
+        <label for="description">Feed Description:</label>
+        <input type="text" id="description" name="description" placeholder="Feed Description" required><br><br>
+
+        <h3>Stations</h3>
+        <div id="stations">
+            <div class="station">
+                <input type="text" name="stationTitle" placeholder="Station Title" required>
+                <input type="url" name="stationURL" placeholder="Station URL" required>
+                <input type="text" name="stationDescription" placeholder="Station Description" required>
+            </div>
+        </div>
+        <button type="button" id="addStation">+ Add Station</button><br><br>
+
+        <label for="generatedURL">Generated URL:</label>
+        <textarea id="generatedURL" readonly></textarea><br><br>
+
+        <button type="button" id="copyURL">Copy RSS URL</button>
+    </form>
+</body>
+</html>
