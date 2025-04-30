@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.history.replaceState(null, "", pageURL);
     
     // Generate the RSS URL
-    const rssURL = `${window.location.origin}/rss?${queryParams.toString()}`;
+    const rssURL = `${window.location.origin}/api/rss?${queryParams.toString()}`;
     
     // Update the "Generated URL" input box
     generatedURLInput.value = rssURL;
@@ -142,10 +142,18 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("input", updateQueryParams);
 
   // Copy the generated URL to the clipboard
-  copyURLButton.addEventListener("click", () => {
-    generatedURLInput.select();
-    document.execCommand("copy");
-    alert("URL copied to clipboard!");
+  copyURLButton.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(generatedURLInput.value);
+      const originalText = copyURLButton.textContent;
+      copyURLButton.textContent = "✓ Copied!";
+      setTimeout(() => {
+        copyURLButton.textContent = originalText;
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+      alert("Failed to copy URL to clipboard.");
+    }
   });
 
   // Populate the form with query parameters on page load

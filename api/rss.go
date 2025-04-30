@@ -1,11 +1,10 @@
-package main
+package api
 
 import (
 	"encoding/base64"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -44,7 +43,17 @@ type Enclosure struct {
 	Type   string `xml:"type,attr"`
 }
 
-func rssHandler(w http.ResponseWriter, r *http.Request) {
+// Handler - Vercel serverless function
+func Handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	// Handle OPTIONS requests
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	// Extract the base64 encoded data
 	base64Data := r.URL.Query().Get("data")
 	if base64Data == "" {
@@ -135,15 +144,4 @@ func rssHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte(xml.Header))
 	w.Write(xmlOutput)
-}
-
-func formHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "static/index.html")
-}
-
-func main() {
-	http.Handle("/rss", http.HandlerFunc(rssHandler))       // Serve RSS feed at /rss
-	http.Handle("/", http.FileServer(http.Dir("./static"))) // Serve static files
-	fmt.Println("Serving on :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
 }
