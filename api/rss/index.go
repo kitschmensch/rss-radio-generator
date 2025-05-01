@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"time"
 )
 
 var (
@@ -25,12 +24,6 @@ type RSS struct {
 	Channel Channel  `xml:"channel"`
 }
 
-type Guid struct {
-	XMLName     xml.Name `xml:"guid"`
-	IsPermaLink string   `xml:"isPermaLink,attr,omitempty"`
-	Value       string   `xml:",chardata"`
-}
-
 type Channel struct {
 	Title       string `xml:"title"`
 	Description string `xml:"description"`
@@ -41,8 +34,6 @@ type Channel struct {
 type Item struct {
 	Title     string     `xml:"title"`
 	Enclosure *Enclosure `xml:"enclosure"`
-	Guid      *Guid      `xml:"guid"`
-	PubDate   string     `xml:"pubDate,omitempty"`
 }
 
 type Enclosure struct {
@@ -130,15 +121,9 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 
 	// Build RSS items
 	var items []Item
-	itemPubDate := time.Now().Format(time.RFC1123Z)
 	for _, station := range formData.Stations {
 		items = append(items, Item{
 			Title: station.Title,
-			Guid: &Guid{ // Add GUID using the station URL
-				IsPermaLink: "false",
-				Value:       station.URL,
-			},
-			PubDate: itemPubDate,
 			Enclosure: &Enclosure{
 				URL:    station.URL,
 				Length: "0",
