@@ -15,15 +15,13 @@ document.addEventListener("DOMContentLoaded", () => {
       .map(station => {
         const stationTitle = station.querySelector('input[name="stationTitle"]').value;
         const stationURL = station.querySelector('input[name="stationURL"]').value;
-        const stationDescription = station.querySelector('input[name="stationDescription"]').value;
         
         // Only create station entries for valid inputs
-        if (!stationTitle && !stationURL && !stationDescription) return null;
+        if (!stationTitle && !stationURL) return null;
         
         return {
           title: stationTitle,
           url: stationURL,
-          description: stationDescription
         };
       })
       .filter(station => station !== null);
@@ -94,12 +92,10 @@ document.addEventListener("DOMContentLoaded", () => {
           // Sanitize values to prevent XSS
           const safeTitle = (station.title || '').replace(/</g, '&lt;').replace(/"/g, '&quot;');
           const safeUrl = (station.url || '').replace(/</g, '&lt;').replace(/"/g, '&quot;');
-          const safeDescription = (station.description || '').replace(/</g, '&lt;').replace(/"/g, '&quot;');
           
           stationDiv.innerHTML = `
             <input type="text" name="stationTitle" placeholder="Station Title" value="${safeTitle}" required>
             <input type="url" name="stationURL" placeholder="Station URL" value="${safeUrl}" required>
-            <input type="text" name="stationDescription" placeholder="Station Description" value="${safeDescription}" required>
             <button type="button" class="removeStation">Remove</button>
           `;
           stationsContainer.appendChild(stationDiv);
@@ -124,7 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
     stationDiv.innerHTML = `
       <input type="text" name="stationTitle" placeholder="Station Title" required>
       <input type="url" name="stationURL" placeholder="Station URL" required>
-      <input type="text" name="stationDescription" placeholder="Station Description" required>
       <button type="button" class="removeStation">Remove</button>
     `;
     stationsContainer.appendChild(stationDiv);

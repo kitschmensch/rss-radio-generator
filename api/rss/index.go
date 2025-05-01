@@ -32,9 +32,8 @@ type Channel struct {
 }
 
 type Item struct {
-	Title       string     `xml:"title"`
-	Description string     `xml:"description"`
-	Enclosure   *Enclosure `xml:"enclosure"`
+	Title     string     `xml:"title"`
+	Enclosure *Enclosure `xml:"enclosure"`
 }
 
 type Enclosure struct {
@@ -124,8 +123,7 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 	var items []Item
 	for _, station := range formData.Stations {
 		items = append(items, Item{
-			Title:       station.Title,
-			Description: station.Description,
+			Title: station.Title,
 			Enclosure: &Enclosure{
 				URL:    station.URL,
 				Length: "0",
